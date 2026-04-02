@@ -47,6 +47,10 @@ class Settings:
     # Get your key at: https://www.semanticscholar.org/product/api
     SEMANTIC_SCHOLAR_API_KEY: str = os.getenv("SEMANTIC_SCHOLAR_API_KEY", "")
     SEMANTIC_SCHOLAR_BASE_URL: str = "https://api.semanticscholar.org/graph/v1"
+    
+    # Toggle to bypass API rate limits during development
+    # Change to False once the API key is approved
+    USE_MOCK_API: bool = os.getenv("USE_MOCK_API", "True").lower() in ("true", "1", "yes")
 
     # --- Neo4j Graph Database ---
     # For AuraDB Free: URI looks like "neo4j+s://xxxxx.databases.neo4j.io"
