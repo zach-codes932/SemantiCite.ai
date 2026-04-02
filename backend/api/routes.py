@@ -253,6 +253,8 @@ async def health_check():
 # BACKGROUND TASK — Agent execution (placeholder for Phase 2)
 # =================================================================
 
+from agent.orchestrator import agent_graph
+
 async def run_agent_task(
     task_id: str,
     query: str,
@@ -260,52 +262,49 @@ async def run_agent_task(
     max_papers: int,
 ):
     """
-    Execute the full agent pipeline in the background.
-    
-    This function runs AFTER the /api/search response is sent.
-    It updates agent_tasks[task_id] as it progresses, which the
-    frontend reads via the SSE /api/status/{task_id} endpoint.
-    
-    Pipeline steps (implemented in Phase 2):
-    1. Search Semantic Scholar for seed papers
-    2. For each seed paper, fetch its citations/references
-    3. Extract citation context windows
-    4. Classify each citation using the LLM
-    5. Write papers and relationships to Neo4j
-    6. Repeat for the next citation depth level
-    
-    For now (Phase 1), this is a PLACEHOLDER that demonstrates
-    the status update mechanism with simulated progress.
+    Execute the LangGraph agent pipeline in the background.
     """
     try:
         # --- Step 1: Update status to "running" ---
         agent_tasks[task_id].status = "running"
-        agent_tasks[task_id].step = "searching"
-        agent_tasks[task_id].message = f"Searching for papers on '{query}'..."
-        agent_tasks[task_id].progress = 10.0
+        agent_tasks[task_id].step = "initializing"
+        agent_tasks[task_id].message = f"Initializing agent for '{query}'..."
+        agent_tasks[task_id].progress = 5.0
 
-        # Simulate work (will be replaced with actual agent logic in Phase 2)
-        await asyncio.sleep(2)
+        # Define the initial state for LangGraph
+        initial_state = {
+            "topic": query,
+            "max_depth": depth,
+            "current_depth": 0,
+            "task_id": task_id,
+            "papers_to_process": [],
+            "processed_paper_ids": set(),
+            "total_papers_found": 0,
+            "total_edges_created": 0
+        }
 
-        # --- Step 2: Simulate paper discovery ---
-        agent_tasks[task_id].step = "fetching_citations"
-        agent_tasks[task_id].message = f"Found seed papers. Fetching citations (depth={depth})..."
-        agent_tasks[task_id].progress = 40.0
-        await asyncio.sleep(2)
+        agent_tasks[task_id].step = "processing"
+        agent_tasks[task_id].message = "Agent is traversing the citation graph..."
+        agent_tasks[task_id].progress = 20.0
 
-        # --- Step 3: Simulate classification ---
-        agent_tasks[task_id].step = "classifying"
-        agent_tasks[task_id].message = "Classifying citation relationships with LLM..."
-        agent_tasks[task_id].progress = 70.0
-        await asyncio.sleep(2)
+        # Run the agent synchronously inside an async wrapper
+        # LangGraph exposes ainvoke for async execution
+        final_state = await agent_graph.ainvoke(initial_state)
 
-        # --- Step 4: Mark as completed ---
+        # --- Finalizing task ---
         agent_tasks[task_id].status = "completed"
         agent_tasks[task_id].step = "done"
-        agent_tasks[task_id].message = f"Search complete for '{query}'!"
+        
+        papers = final_state.get('total_papers_found', 0)
+        edges = final_state.get('total_edges_created', 0)
+        agent_tasks[task_id].message = f"Done! Discovered {papers} papers and {edges} semantic relationships."
         agent_tasks[task_id].progress = 100.0
+        agent_tasks[task_id].papers_found = papers
+        agent_tasks[task_id].edges_created = edges
 
     except Exception as e:
         # --- Error handling: mark task as failed ---
+        import traceback
+        traceback.print_exc()
         agent_tasks[task_id].status = "failed"
         agent_tasks[task_id].message = f"Error: {str(e)}"
