@@ -1,0 +1,53 @@
+/*
+============================================================
+GraphCanvas Component — Styles
+============================================================
+*/
+
+.graph-canvas {
+  position: relative;
+  flex: 1;
+  min-height: 500px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+}
+
+/* The Cytoscape div fills the entire canvas */
+.graph-canvas__container {
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+}
+
+/* --- Empty State Overlay --- */
+.graph-canvas__empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-8);
+  text-align: center;
+  pointer-events: none;
+}
+
+.graph-canvas__empty-icon {
+  color: var(--text-tertiary);
+  opacity: 0.4;
+}
+
+.graph-canvas__empty h3 {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.graph-canvas__empty p {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  max-width: 360px;
+}

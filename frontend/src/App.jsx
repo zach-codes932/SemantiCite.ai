@@ -1,121 +1,143 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+/*
+============================================================
+SemantiCite.ai — Main Application Component (App.jsx)
+============================================================
+PURPOSE:
+    The central point that ties everything together.
+    Manages the application state (Graph Data, Agent Progress,
+    Selected Node, Filter) and renders the layout.
+============================================================
+*/
 
-function App() {
-  const [count, setCount] = useState(0)
+import { useState, useEffect } from 'react';
+import Header from './components/Header';
+import SearchBar from './components/SearchBar';
+import GraphCanvas from './components/GraphCanvas';
+import PaperDetailPanel from './components/PaperDetailPanel';
+import FilterPanel from './components/FilterPanel';
+import { searchTopic, getGraph, getStats, subscribeToStatus } from './services/api';
+
+export default function App() {
+  // Application State
+  const [graphData, setGraphData] = useState(null);
+  const [stats, setStats] = useState(null);
+  const [activePaper, setActivePaper] = useState(null);
+  const [activeFilter, setActiveFilter] = useState(null);
+  
+  // Agent / Background Task State
+  const [isAgentRunning, setIsAgentRunning] = useState(false);
+  const [agentProgress, setAgentProgress] = useState(null);
+
+  // Load initial graph data on mount
+  useEffect(() => {
+    fetchGraphAndStats();
+  }, [activeFilter]); // Re-fetch graph if the user changes the filter
+
+  const fetchGraphAndStats = async () => {
+    try {
+      const gData = await getGraph(activeFilter);
+      setGraphData(gData);
+      
+      const st = await getStats();
+      setStats(st);
+    } catch (err) {
+      console.error("Error fetching graph data:", err);
+    }
+  };
+
+  /**
+   * Triggers the backend LLM agent to crawl a new topic
+   */
+  const handleSearch = async (query, depth) => {
+    try {
+      setIsAgentRunning(true);
+      setAgentProgress({ message: 'Initializing...', progress: 5 });
+      setActivePaper(null); // Close panel if open
+
+      // 1. Send the POST request to start the background agent
+      const response = await searchTopic(query, depth);
+      const taskId = response.task_id;
+
+      // 2. Open an SSE stream to listen for progress updates
+      const sse = subscribeToStatus(taskId);
+      
+      sse.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log("Agent update:", data);
+        
+        setAgentProgress(data);
+        
+        // When completed, close the stream and refresh the graph
+        if (data.status === 'completed' || data.status === 'failed') {
+          sse.close();
+          setIsAgentRunning(false);
+          // Wait a short moment then pull the newly generated graph data
+          setTimeout(() => {
+            fetchGraphAndStats();
+            setAgentProgress(null);
+          }, 1500);
+        }
+      };
+
+      sse.onerror = () => {
+        sse.close();
+        setIsAgentRunning(false);
+        setAgentProgress(null);
+      };
+
+    } catch (err) {
+      console.error("Failed to start search:", err);
+      setIsAgentRunning(false);
+    }
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="layout">
+      <Header />
+      
+      <main className="layout__main">
+        {/* Top Control Bar */}
+        <section className="layout__controls">
+          <SearchBar 
+            onSearch={handleSearch} 
+            isLoading={isAgentRunning} 
+            progress={agentProgress} 
+          />
+        </section>
 
-      <div className="ticks"></div>
+        {/* Dashboard Area */}
+        <section className="layout__dashboard">
+          <GraphCanvas 
+            graphData={graphData} 
+            onNodeClick={setActivePaper}
+            activeFilter={activeFilter}
+          />
+          
+          <FilterPanel 
+            activeFilter={activeFilter} 
+            onChange={setActiveFilter} 
+          />
+          
+          <PaperDetailPanel 
+            paper={activePaper} 
+            onClose={() => setActivePaper(null)} 
+          />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+          {/* Inline Statistics Overlay at bottom right */}
+          {stats && !activePaper && (
+            <div className="layout__stats glass-card animate-fade-in">
+              <div className="layout__stat-item">
+                <span className="layout__stat-val">{stats.total_papers || 0}</span>
+                <span className="layout__stat-lbl">Papers</span>
+              </div>
+              <div className="layout__stat-item">
+                <span className="layout__stat-val">{stats.total_citations || 0}</span>
+                <span className="layout__stat-lbl">Citations</span>
+              </div>
+            </div>
+          )}
+        </section>
+      </main>
+    </div>
+  );
 }
-
-export default App

@@ -1,0 +1,79 @@
+/*
+============================================================
+FilterPanel Component — Styles
+============================================================
+*/
+
+.filter-panel {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  width: 220px;
+  padding: var(--space-3);
+  z-index: 40;
+}
+
+.filter-panel__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.filter-panel__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  text-align: left;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.filter-btn:hover {
+  background: var(--glass-hover);
+  color: var(--text-primary);
+}
+
+.filter-btn.active {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Color dot indicators mapping to relationship types */
+.filter-btn__indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+}
+
+.filter-btn__indicator[data-type="all"] { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo)); }
+.filter-btn__indicator[data-type="supports"] { background: var(--color-supports); }
+.filter-btn__indicator[data-type="critiques"] { background: var(--color-critiques); }
+.filter-btn__indicator[data-type="extends"] { background: var(--color-extends); }
+.filter-btn__indicator[data-type="uses_method"] { background: var(--color-uses-method); }
+.filter-btn__indicator[data-type="basis"] { background: var(--color-basis); }
+.filter-btn__indicator[data-type="background"] { background: var(--color-background); }

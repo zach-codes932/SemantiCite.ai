@@ -1,0 +1,125 @@
+/*
+============================================================
+SearchBar Component — Styles
+============================================================
+*/
+
+.search-bar {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* --- Form Layout --- */
+.search-bar__form {
+  display: flex;
+  gap: var(--space-3);
+  align-items: stretch;
+}
+
+.search-bar__input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.search-bar__input-wrapper:focus-within {
+  border-color: var(--accent-indigo);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.search-bar__icon {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.search-bar__input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  padding: var(--space-2) 0;
+}
+
+.search-bar__input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.search-bar__input:disabled {
+  opacity: 0.5;
+}
+
+.search-bar__options-btn {
+  padding: var(--space-1) var(--space-2) !important;
+  border: none !important;
+}
+
+.search-bar__submit {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: var(--space-3) var(--space-8);
+}
+
+/* --- Advanced Options --- */
+.search-bar__options {
+  margin-top: var(--space-3);
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+}
+
+.search-bar__option-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.search-bar__select {
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* --- Progress Bar --- */
+.search-bar__progress {
+  margin-top: var(--space-4);
+  animation: fadeInUp 0.3s var(--ease-out);
+}
+
+.search-bar__progress-bar {
+  height: 4px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.search-bar__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-indigo), var(--accent-violet));
+  border-radius: var(--radius-full);
+  transition: width 0.5s var(--ease-out);
+}
+
+.search-bar__progress-text {
+  margin-top: var(--space-2);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+}

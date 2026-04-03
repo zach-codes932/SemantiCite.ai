@@ -1,0 +1,113 @@
+/*
+============================================================
+PaperDetailPanel Component — Styles
+============================================================
+*/
+
+.paper-panel {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  width: 380px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  padding: var(--space-6);
+  z-index: 50;
+}
+
+/* --- Header (title + close button) --- */
+.paper-panel__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.paper-panel__title {
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.paper-panel__close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.paper-panel__close:hover {
+  color: var(--text-primary);
+  background: var(--accent-rose);
+  border-color: var(--accent-rose);
+}
+
+/* --- Metadata chips --- */
+.paper-panel__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.paper-panel__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--glass-border);
+}
+
+/* --- Content Sections --- */
+.paper-panel__section {
+  margin-bottom: var(--space-4);
+}
+
+.paper-panel__section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-2);
+}
+
+.paper-panel__authors {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.paper-panel__abstract {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* --- External Link Button --- */
+.paper-panel__link {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-decoration: none;
+  margin-top: var(--space-2);
+}
