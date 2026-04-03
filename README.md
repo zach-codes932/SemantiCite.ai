@@ -107,5 +107,4 @@ This project is developed as part of the MCA IV Semester Major Project at the De
 
 ## 👤 Author
 
-**Zaki Nafees** — 24MCA058
-Supervisor: **Dr. Mansaf Alam**, Professor (DCS)
+**Zaki Nafees**
