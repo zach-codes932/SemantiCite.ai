@@ -45,6 +45,19 @@ export default function App() {
     }
   };
 
+  // Live Graph Updates: Fetch graph every 3 seconds while the agent wanders
+  useEffect(() => {
+    let intervalId;
+    if (isAgentRunning) {
+      intervalId = setInterval(() => {
+        fetchGraphAndStats();
+      }, 3000);
+    }
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [isAgentRunning, activeFilter]);
+
   /**
    * Triggers the backend LLM agent to crawl a new topic
    */

@@ -24,7 +24,7 @@ You must classify the citation into EXACTLY ONE of the following categories:
 3. "extends": The authors are directly building upon the cited work's models, theories, or framework to create something new.
 4. "uses_method": The authors are directly applying a tool, algorithm, dataset, or mathematical method from the cited work.
 5. "basis": The cited work is the fundamental theoretical foundation for the current paper.
-6. "background": The citation is simply providing historical context, a literature review, or defining terms (use this as the default if others don't apply).
+6. "background": The citation is simply providing historical context or literature review. (AVOID THIS CATEGORY unless absolutely necessary. Try very hard to fit the citation into one of the 5 categories above first to ensure a dense, meaningful semantic graph).
 
 Here are some examples to guide you:
 

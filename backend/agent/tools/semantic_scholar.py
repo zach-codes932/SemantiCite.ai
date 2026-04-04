@@ -189,6 +189,7 @@ class SemanticScholarClient:
             "query": query,
             "limit": limit,
             "fields": ",".join(PAPER_FIELDS),
+            "sort": "citationCount:desc",  # Prioritize highly cited monumental papers
         }
 
         # Make the API request (with automatic retry on rate limits)

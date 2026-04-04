@@ -16,7 +16,7 @@ ARCHITECTURE ROLE:
 import json
 import asyncio
 import random
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 
 from config import settings
@@ -38,15 +38,18 @@ class LLMClassifier:
     """
 
     def __init__(self):
-        # Initialize the Gemini model via LangChain
-        # We enforce JSON output using response_format if supported,
-        # but Gemini handles JSON well when prompted.
-        self.llm = ChatGoogleGenerativeAI(
+        # Initialize the OpenAI model via LangChain
+        # We explicitly use GPT-4o-mini, which is wildly cheap and fast.
+        self.llm = ChatOpenAI(
             model=settings.LLM_MODEL_NAME,
-            google_api_key=settings.GOOGLE_API_KEY,
+            openai_api_key=settings.OPENAI_API_KEY,
             temperature=0.1,  # Low temperature for consistent classification
-            max_output_tokens=150, # We only need a short JSON response
+            max_tokens=150,   # We only need a short structural response
         )
+        
+        # This powerful feature mathematically guarantees the output matches
+        # the Pydantic schema perfectly, avoiding the need for regex parsing text.
+        self.structured_llm = self.llm.with_structured_output(ClassificationResult)
 
     async def classify_citation(
         self, citing_title: str, cited_title: str, context_text: str
@@ -62,9 +65,9 @@ class LLMClassifier:
         Returns:
             Dictionary with {relationship_type, confidence, reasoning}
         """
-        if not settings.GOOGLE_API_KEY:
+        if not settings.OPENAI_API_KEY:
             # Fallback if no LLM key is provided: just return "background"
-            print("  [WARN] No Google API Key. Defaulting classification to 'background'")
+            print("  [WARN] No OpenAI API Key found. Defaulting classification to 'background'")
             return {
                 "relationship_type": RelationshipType.BACKGROUND,
                 "confidence": 0.5,
@@ -82,8 +85,9 @@ Citation Context text:
 Classify this citation as a JSON object exactly as instructed.
 """
 
-        # Add a small delay to avoid hitting Gemini Free Tier rate limits (RPM)
-        await asyncio.sleep(1.0)
+        # Add a 0.2s delay to safely respect 500 Requests Per Minute (Tier 1 limit)
+        # 0.2s = max 300 RPM, well within safe limits holding for async workers
+        await asyncio.sleep(0.2)
 
         try:
             # Combine system and user prompts
@@ -92,20 +96,8 @@ Classify this citation as a JSON object exactly as instructed.
                 ("user", user_prompt)
             ]
             
-            # Call Gemini
-            response = await self.llm.ainvoke(messages)
-            
-            # Extract JSON from the markdown codeblocks Gemini usually returns
-            response_text = response.content.strip()
-            if response_text.startswith("```json"):
-                response_text = response_text[7:-3].strip()
-            elif response_text.startswith("```"):
-                response_text = response_text[3:-3].strip()
-                
-            data = json.loads(response_text)
-            
-            # Validate output matches our schema
-            result = ClassificationResult(**data)
+            # Call OpenAI and get structured Pydantic object back directly!
+            result = await self.structured_llm.ainvoke(messages)
             
             return {
                 "relationship_type": result.relationship_type,

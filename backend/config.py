@@ -59,11 +59,11 @@ class Settings:
     NEO4J_USER: str = os.getenv("NEO4J_USER", "neo4j")
     NEO4J_PASSWORD: str = os.getenv("NEO4J_PASSWORD", "")
 
-    # --- Google Gemini LLM ---
-    # Get your API key at: https://aistudio.google.com/apikey
-    # We use Gemini Flash for fast, free citation classification
-    GOOGLE_API_KEY: str = os.getenv("GOOGLE_API_KEY", "")
-    LLM_MODEL_NAME: str = os.getenv("LLM_MODEL_NAME", "gemini-2.0-flash")
+    # --- OpenAI LLM ---
+    # We use gpt-4o-mini for fast, strictly-structured citation classification
+    # with high rate limits (~500 RPM on Tier 1).
+    OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
+    LLM_MODEL_NAME: str = os.getenv("LLM_MODEL_NAME", "gpt-4o-mini")
 
     # --- Application Settings ---
     # CORS: Which frontend origins are allowed to call our API

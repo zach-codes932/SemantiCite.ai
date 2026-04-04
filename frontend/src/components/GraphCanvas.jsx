@@ -40,17 +40,16 @@ const cytoscapeStylesheet = [
   {
     selector: 'node',
     style: {
-      /* Show the paper title, truncated */
       'label': 'data(label)',
-      'text-wrap': 'ellipsis',
-      'text-max-width': '120px',
-      'font-size': '10px',
+      'text-wrap': 'wrap',
+      'text-max-width': '38px', /* Strict width before wrapping inside circle */
+      'line-height': 1.1,
+      'font-size': '8px',
       'font-family': 'Inter, sans-serif',
-      'color': '#e2e8f0',
-      'text-outline-color': '#0a0e1a',
-      'text-outline-width': 2,
-      'text-valign': 'bottom',
-      'text-margin-y': 8,
+      'color': '#ffffff', /* Pure white text inside the node */
+      'text-valign': 'center', /* Vertically center inside the node */
+      'text-halign': 'center', /* Horizontally center inside the node */
+      'text-outline-width': 0, /* Remove outline so it looks flat inside */
 
       /* Circle appearance */
       'background-color': '#4f46e5', /* Darker indigo to let colored arrows shine */
@@ -58,9 +57,9 @@ const cytoscapeStylesheet = [
       'border-width': 2,
       'border-color': 'rgba(79, 70, 229, 0.4)',
 
-      /* Size proportional to citation count (clamped range) */
-      'width': 'mapData(citations, 0, 50000, 24, 60)',
-      'height': 'mapData(citations, 0, 50000, 24, 60)',
+      /* Size proportional to citation count (increased to fit text!) */
+      'width': 'mapData(citations, 0, 50000, 45, 85)',
+      'height': 'mapData(citations, 0, 50000, 45, 85)',
 
       /* Smooth transitions on state change */
       'transition-property': 'background-color, border-color, width, height',
@@ -147,7 +146,8 @@ export default function GraphCanvas({ graphData, onNodeClick, activeFilter }) {
       elements.push({
         data: {
           id: paper.paper_id || paper.id,
-          label: paper.title ? paper.title.substring(0, 50) : 'Untitled',
+          // Shorter label so it wraps cleanly inside 45px bubbles
+          label: paper.title ? paper.title.substring(0, 18) + (paper.title.length > 18 ? '...' : '') : 'Untitled',
           fullTitle: paper.title,
           year: paper.year,
           citations: paper.citation_count || 0,
