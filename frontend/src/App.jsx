@@ -15,7 +15,7 @@ import SearchBar from './components/SearchBar';
 import GraphCanvas from './components/GraphCanvas';
 import PaperDetailPanel from './components/PaperDetailPanel';
 import FilterPanel from './components/FilterPanel';
-import { searchTopic, getGraph, getStats, subscribeToStatus } from './services/api';
+import { searchTopic, getGraph, getStats, subscribeToStatus, clearGraph } from './services/api';
 
 export default function App() {
   // Application State
@@ -91,6 +91,23 @@ export default function App() {
     }
   };
 
+  /**
+   * Resets the entire knowledge graph database
+   */
+  const handleClearGraph = async () => {
+    try {
+      await clearGraph();
+      // Reset local state for immediate feedback
+      setGraphData({ nodes: [], edges: [] });
+      setStats({ total_papers: 0, total_citations: 0 });
+      setActivePaper(null);
+      console.log("Graph cleared successfully.");
+    } catch (err) {
+      console.error("Failed to clear graph:", err);
+      alert("Error: Could not clear the graph. Check backend logs.");
+    }
+  };
+
   return (
     <div className="layout">
       <Header />
@@ -116,6 +133,7 @@ export default function App() {
           <FilterPanel 
             activeFilter={activeFilter} 
             onChange={setActiveFilter} 
+            onClear={handleClearGraph}
           />
           
           <PaperDetailPanel 

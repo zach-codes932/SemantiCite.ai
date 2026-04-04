@@ -27,7 +27,7 @@ const FILTER_OPTIONS = [
  * @param {string}   props.activeFilter - The currently selected filter key
  * @param {function} props.onChange     - Callback when filter changes
  */
-export default function FilterPanel({ activeFilter, onChange }) {
+export default function FilterPanel({ activeFilter, onChange, onClear }) {
   return (
     <div className="filter-panel glass-card">
       <div className="filter-panel__header">
@@ -49,6 +49,19 @@ export default function FilterPanel({ activeFilter, onChange }) {
             {option.label}
           </button>
         ))}
+      </div>
+
+      <div className="filter-panel__footer">
+        <button 
+          className="btn-ghost filter-panel__clear-btn"
+          onClick={() => {
+            if (window.confirm("Are you sure you want to delete ALL data from the knowledge graph? This cannot be undone.")) {
+              onClear();
+            }
+          }}
+        >
+          Reset Graph
+        </button>
       </div>
     </div>
   );

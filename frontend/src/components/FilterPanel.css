@@ -6,7 +6,7 @@ FilterPanel Component — Styles
 
 .filter-panel {
   position: absolute;
-  top: var(--space-4);
+  top: 80px;
   left: var(--space-4);
   width: 220px;
   padding: var(--space-3);
@@ -70,10 +70,50 @@ FilterPanel Component — Styles
   background: var(--text-tertiary);
 }
 
-.filter-btn__indicator[data-type="all"] { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo)); }
-.filter-btn__indicator[data-type="supports"] { background: var(--color-supports); }
-.filter-btn__indicator[data-type="critiques"] { background: var(--color-critiques); }
-.filter-btn__indicator[data-type="extends"] { background: var(--color-extends); }
-.filter-btn__indicator[data-type="uses_method"] { background: var(--color-uses-method); }
-.filter-btn__indicator[data-type="basis"] { background: var(--color-basis); }
-.filter-btn__indicator[data-type="background"] { background: var(--color-background); }
+.filter-btn__indicator[data-type="all"] {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+}
+
+.filter-btn__indicator[data-type="supports"] {
+  background: var(--color-supports);
+}
+
+.filter-btn__indicator[data-type="critiques"] {
+  background: var(--color-critiques);
+}
+
+.filter-btn__indicator[data-type="extends"] {
+  background: var(--color-extends);
+}
+
+.filter-btn__indicator[data-type="uses_method"] {
+  background: var(--color-uses-method);
+}
+
+.filter-btn__indicator[data-type="basis"] {
+  background: var(--color-basis);
+}
+
+.filter-btn__indicator[data-type="background"] {
+  background: var(--color-background);
+}
+
+.filter-panel__footer {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--glass-border);
+}
+
+.filter-panel__clear-btn {
+  width: 100%;
+  font-size: 0.7rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-rose) !important;
+  border-color: rgba(244, 63, 94, 0.2) !important;
+}
+
+.filter-panel__clear-btn:hover {
+  background: rgba(244, 63, 94, 0.1) !important;
+  border-color: var(--accent-rose) !important;
+}

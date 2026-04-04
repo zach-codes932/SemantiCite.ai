@@ -62,20 +62,20 @@ class AgentState(TypedDict):
 async def search_seed_papers(state: AgentState) -> dict:
     """Find the initial prominent papers for the topic."""
     
-    # In a real system, we'd update the API status here using a callback.
-    # For now, we update the internal state numbers.
     print(f"\n[Agent] Searching for '{state['topic']}'...")
     
     async with SemanticScholarClient() as client:
         papers = await client.search_papers(state["topic"])
         
+    print(f"[Agent] Found {len(papers)} papers. Saving to graph...")
     writer = GraphWriter()
     
     # Save seed papers to the graph immediately
-    for p in papers:
+    for i, p in enumerate(papers):
+        print(f"  [{i+1}/{len(papers)}] Saving seed node: {p.title[:30]}...")
         await writer.save_paper(p)
         
-    print(f"[Agent] Found {len(papers)} seed papers.")
+    print(f"[Agent] Successfully saved {len(papers)} seed papers.")
         
     return {
         "papers_to_process": papers,

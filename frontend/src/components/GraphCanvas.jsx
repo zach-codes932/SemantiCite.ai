@@ -53,10 +53,10 @@ const cytoscapeStylesheet = [
       'text-margin-y': 8,
 
       /* Circle appearance */
-      'background-color': '#6366f1',
-      'background-opacity': 0.85,
+      'background-color': '#4f46e5', /* Darker indigo to let colored arrows shine */
+      'background-opacity': 0.9,
       'border-width': 2,
-      'border-color': 'rgba(99, 102, 241, 0.6)',
+      'border-color': 'rgba(79, 70, 229, 0.4)',
 
       /* Size proportional to citation count (clamped range) */
       'width': 'mapData(citations, 0, 50000, 24, 60)',
@@ -83,8 +83,8 @@ const cytoscapeStylesheet = [
   {
     selector: 'node[?isSeed]',
     style: {
-      'background-color': '#06b6d4',
-      'border-color': 'rgba(6, 182, 212, 0.6)',
+      'background-color': '#0891b2', /* Deeper cyan */
+      'border-color': 'rgba(8, 145, 178, 0.4)',
     },
   },
 
@@ -92,13 +92,13 @@ const cytoscapeStylesheet = [
   {
     selector: 'edge',
     style: {
-      'width': 1.5,
+      'width': 2.5, /* Thicker line for better color visibility */
       'line-color': 'data(color)',
       'target-arrow-color': 'data(color)',
       'target-arrow-shape': 'triangle',
-      'arrow-scale': 0.8,
+      'arrow-scale': 1.2, /* Larger arrowheads */
       'curve-style': 'bezier',
-      'opacity': 0.6,
+      'opacity': 0.95, /* Higher opacity so colors pop */
       'transition-property': 'opacity, width',
       'transition-duration': '0.2s',
     },

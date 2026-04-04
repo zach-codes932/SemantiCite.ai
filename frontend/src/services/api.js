@@ -75,6 +75,21 @@ export async function getGraph(relationshipFilter = null) {
 
 
 // =================================================================
+// GRAPH MANAGEMENT — Reset the database
+// =================================================================
+
+/**
+ * Deletes all nodes and relationships from the database.
+ * 
+ * @returns {Promise<{message: string}>}
+ */
+export async function clearGraph() {
+  const response = await api.delete('/graph');
+  return response.data;
+}
+
+
+// =================================================================
 // PAPER DETAILS — Get full metadata for a single paper
 // =================================================================
 

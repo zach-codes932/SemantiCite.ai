@@ -6,7 +6,7 @@ PaperDetailPanel Component — Styles
 
 .paper-panel {
   position: absolute;
-  top: var(--space-4);
+  top: 80px;
   right: var(--space-4);
   width: 380px;
   max-height: calc(100vh - 200px);

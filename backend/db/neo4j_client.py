@@ -28,6 +28,7 @@ KEY DESIGN DECISIONS:
 
 from neo4j import AsyncGraphDatabase, AsyncDriver
 from typing import Optional
+import asyncio
 from config import settings
 from db.models import PaperNode, CitationEdge, RelationshipType
 
@@ -66,9 +67,15 @@ class Neo4jClient:
         self._driver = AsyncGraphDatabase.driver(
             settings.NEO4J_URI,
             auth=(settings.NEO4J_USER, settings.NEO4J_PASSWORD),
+            connection_timeout=15.0, # 15 second timeout for initial connection
+            max_connection_lifetime=600, # 10 minutes max connection age
         )
         # Verify the connection is working
-        await self._driver.verify_connectivity()
+        try:
+            await asyncio.wait_for(self._driver.verify_connectivity(), timeout=20.0)
+        except asyncio.TimeoutError:
+            print("  [ERROR] Neo4j connection timed out during verification.")
+            raise Exception("Neo4j connection timed out.")
 
     async def close(self):
         """Close the database connection and release all resources."""

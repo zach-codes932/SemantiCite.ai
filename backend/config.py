@@ -50,7 +50,7 @@ class Settings:
     
     # Toggle to bypass API rate limits during development
     # Change to False once the API key is approved
-    USE_MOCK_API: bool = os.getenv("USE_MOCK_API", "True").lower() in ("true", "1", "yes")
+    USE_MOCK_API: bool = os.getenv("USE_MOCK_API", "False").lower() in ("true", "1", "yes")
 
     # --- Neo4j Graph Database ---
     # For AuraDB Free: URI looks like "neo4j+s://xxxxx.databases.neo4j.io"
@@ -74,10 +74,10 @@ class Settings:
     DEFAULT_CRAWL_DEPTH: int = int(os.getenv("DEFAULT_CRAWL_DEPTH", "2"))
     
     # Maximum number of seed papers to fetch per search query
-    MAX_SEED_PAPERS: int = int(os.getenv("MAX_SEED_PAPERS", "10"))
+    MAX_SEED_PAPERS: int = int(os.getenv("MAX_SEED_PAPERS", "5"))
     
     # Maximum citations to process per paper (prevents runaway crawling)
-    MAX_CITATIONS_PER_PAPER: int = int(os.getenv("MAX_CITATIONS_PER_PAPER", "20"))
+    MAX_CITATIONS_PER_PAPER: int = int(os.getenv("MAX_CITATIONS_PER_PAPER", "10"))
 
 
 # === Singleton Settings Instance ===

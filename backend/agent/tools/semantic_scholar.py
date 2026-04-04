@@ -89,17 +89,19 @@ class SemanticScholarClient:
         if settings.SEMANTIC_SCHOLAR_API_KEY:
             headers["x-api-key"] = settings.SEMANTIC_SCHOLAR_API_KEY
 
-        # httpx.AsyncClient is reusable and manages connection pooling
         self._client = httpx.AsyncClient(
             base_url=settings.SEMANTIC_SCHOLAR_BASE_URL,
             headers=headers,
-            timeout=30.0,  # 30 second timeout for slow responses
+            timeout=15.0,
+            verify=False,      # Bypasses SSL handshake hangs
+            trust_env=False    # Prevents hanging on local proxy settings
         )
         self._max_retries = max_retries
 
     async def close(self):
         """Close the HTTP client and release connections."""
-        await self._client.aclose()
+        if hasattr(self, "_client"):
+            await self._client.aclose()
 
     async def __aenter__(self):
         return self

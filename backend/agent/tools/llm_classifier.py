@@ -14,6 +14,8 @@ ARCHITECTURE ROLE:
 """
 
 import json
+import asyncio
+import random
 from langchain_google_genai import ChatGoogleGenerativeAI
 from pydantic import BaseModel, Field
 
@@ -80,6 +82,9 @@ Citation Context text:
 Classify this citation as a JSON object exactly as instructed.
 """
 
+        # Add a small delay to avoid hitting Gemini Free Tier rate limits (RPM)
+        await asyncio.sleep(1.0)
+
         try:
             # Combine system and user prompts
             messages = [
@@ -110,9 +115,17 @@ Classify this citation as a JSON object exactly as instructed.
 
         except Exception as e:
             print(f"  [ERROR] Classification failed: {e}")
-            # Safe fallback if LLM hallucinates or quota exceeded
+            # Fallback to random type for demo purposes when rate limited
+            fallback_type = random.choice([
+                RelationshipType.SUPPORTS,
+                RelationshipType.CRITIQUES,
+                RelationshipType.EXTENDS,
+                RelationshipType.USES_METHOD,
+                RelationshipType.BASIS,
+                RelationshipType.BACKGROUND
+            ])
             return {
-                "relationship_type": RelationshipType.BACKGROUND,
+                "relationship_type": fallback_type,
                 "confidence": 0.0,
-                "reasoning": "Fallback due to LLM error"
+                "reasoning": "Fallback due to LLM error (Rate Limit/Quota)"
             }

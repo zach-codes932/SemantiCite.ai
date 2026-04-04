@@ -250,8 +250,23 @@ async def health_check():
 
 
 # =================================================================
-# BACKGROUND TASK — Agent execution (placeholder for Phase 2)
+# GRAPH MANAGEMENT — Clear/Reset
 # =================================================================
+
+@router.delete("/graph")
+async def clear_graph():
+    """
+    Delete all data from the Neo4j database. 
+    Allows for a fresh start in the UI.
+    """
+    try:
+        async with Neo4jClient() as client:
+            await client.clear_database()
+        return {"message": "Knowledge graph cleared successfully."}
+    except Exception as e:
+        print(f" [ERROR] Failed to clear graph: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 from agent.orchestrator import agent_graph
 
@@ -265,11 +280,11 @@ async def run_agent_task(
     Execute the LangGraph agent pipeline in the background.
     """
     try:
-        # --- Step 1: Update status to "running" ---
+        print(f" [Task {task_id}] Preparing agent state...")
         agent_tasks[task_id].status = "running"
-        agent_tasks[task_id].step = "initializing"
-        agent_tasks[task_id].message = f"Initializing agent for '{query}'..."
-        agent_tasks[task_id].progress = 5.0
+        agent_tasks[task_id].step = "processing"
+        agent_tasks[task_id].message = f"Agent is traversing the citation graph for '{query}'..."
+        agent_tasks[task_id].progress = 10.0
 
         # Define the initial state for LangGraph
         initial_state = {
@@ -283,13 +298,10 @@ async def run_agent_task(
             "total_edges_created": 0
         }
 
-        agent_tasks[task_id].step = "processing"
-        agent_tasks[task_id].message = "Agent is traversing the citation graph..."
-        agent_tasks[task_id].progress = 20.0
-
-        # Run the agent synchronously inside an async wrapper
-        # LangGraph exposes ainvoke for async execution
+        print(f" [Task {task_id}] Starting LangGraph.ainvoke...")
+        # Run the agent pipeline
         final_state = await agent_graph.ainvoke(initial_state)
+        print(f" [Task {task_id}] LangGraph.ainvoke completed successfully.")
 
         # --- Finalizing task ---
         agent_tasks[task_id].status = "completed"
