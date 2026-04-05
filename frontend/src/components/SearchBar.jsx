@@ -33,7 +33,7 @@ export default function SearchBar({ onSearch, isLoading, progress }) {
   };
 
   return (
-    <div className="search-bar animate-fade-in">
+    <div className={`search-bar animate-fade-in ${isLoading ? 'search-bar--loading' : ''}`}>
       {/* === Search Form === */}
       <form className="search-bar__form" onSubmit={handleSubmit}>
         <div className="search-bar__input-wrapper">

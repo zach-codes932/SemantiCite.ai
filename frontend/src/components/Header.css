@@ -6,13 +6,18 @@ Header Component — Styles
 
 .header {
   position: sticky;
-  top: 0;
+  top: var(--space-4);
   z-index: 100;
-  background: rgba(10, 14, 26, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--glass-border);
+  margin: 0 auto var(--space-4) auto;
+  max-width: 1550px;
+  width: calc(100% - var(--space-6) * 2);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
   padding: var(--space-3) var(--space-6);
+  box-shadow: var(--shadow-md);
 }
 
 .header__inner {
@@ -37,9 +42,9 @@ Header Component — Styles
   width: 40px;
   height: 40px;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet));
-  color: #fff;
-  box-shadow: 0 0 16px rgba(99, 102, 241, 0.3);
+  background: linear-gradient(135deg, #ff8a80, #e53935);
+  color: #0c1012;
+  box-shadow: 0 4px 12px rgba(255, 138, 128, 0.3);
 }
 
 .header__title {

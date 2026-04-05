@@ -15,6 +15,7 @@ Main App Layout Styles
   display: flex;
   flex-direction: column;
   padding: var(--space-6);
+  margin-top: 15vh; /* Large dynamic gap to keep floating header and search controls totally separate */
   max-width: 1600px;
   width: 100%;
   margin: 0 auto;
@@ -62,6 +63,7 @@ Main App Layout Styles
   background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .layout__stat-lbl {

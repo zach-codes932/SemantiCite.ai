@@ -6,7 +6,7 @@ FilterPanel Component — Styles
 
 .filter-panel {
   position: absolute;
-  top: 80px;
+  top: 120px; /* Dropped down to clear floating header */
   left: var(--space-4);
   width: 220px;
   padding: var(--space-3);
@@ -56,8 +56,8 @@ FilterPanel Component — Styles
 }
 
 .filter-btn.active {
-  background: rgba(99, 102, 241, 0.15);
-  border-color: rgba(99, 102, 241, 0.4);
+  background: rgba(255, 138, 128, 0.1);
+  border-color: rgba(255, 138, 128, 0.3);
   color: var(--text-primary);
   font-weight: 500;
 }

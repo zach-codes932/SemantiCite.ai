@@ -6,7 +6,7 @@ PaperDetailPanel Component — Styles
 
 .paper-panel {
   position: absolute;
-  top: 80px;
+  top: 120px; /* Dropped down to clear floating header */
   right: var(--space-4);
   width: 380px;
   max-height: calc(100vh - 200px);

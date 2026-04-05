@@ -10,7 +10,7 @@ PURPOSE:
 
 import { useState, useEffect } from 'react';
 import { healthCheck } from '../services/api';
-import { FiActivity, FiGlobe } from 'react-icons/fi';
+import { FiActivity, FiBookOpen } from 'react-icons/fi';
 import './Header.css';
 
 export default function Header() {
@@ -30,7 +30,7 @@ export default function Header() {
         {/* === Logo & Brand === */}
         <div className="header__brand">
           <div className="header__logo-icon">
-            <FiGlobe size={22} />
+            <FiBookOpen size={22} />
           </div>
           <div>
             <h1 className="header__title">

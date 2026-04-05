@@ -24,14 +24,13 @@ import { useRef, useEffect, useCallback } from 'react';
 import cytoscape from 'cytoscape';
 import './GraphCanvas.css';
 
-/* ---------- Color map for edge relationship types ---------- */
 const EDGE_COLORS = {
-  supports:    '#10b981',
-  critiques:   '#f43f5e',
-  extends:     '#6366f1',
-  uses_method: '#f59e0b',
-  basis:       '#8b5cf6',
-  background:  '#64748b',
+  supports:    '#10b981', /* Green */
+  critiques:   '#f43f5e', /* Rose/Red */
+  extends:     '#818cf8', /* Soft Indigo */
+  uses_method: '#06b6d4', /* Cyan (changed from amber so it contrasts with nodes) */
+  basis:       '#c084fc', /* Soft Violet */
+  background:  '#52525b', /* Zinc (sleeker grey) */
 };
 
 /* ---------- Cytoscape stylesheet (visual rules) ---------- */
@@ -46,16 +45,15 @@ const cytoscapeStylesheet = [
       'line-height': 1.1,
       'font-size': '8px',
       'font-family': 'Inter, sans-serif',
-      'color': '#ffffff', /* Pure white text inside the node */
+      'color': '#000000', /* High-contrast pure black text to match Neo4j */
       'text-valign': 'center', /* Vertically center inside the node */
       'text-halign': 'center', /* Horizontally center inside the node */
       'text-outline-width': 0, /* Remove outline so it looks flat inside */
 
       /* Circle appearance */
-      'background-color': '#4f46e5', /* Darker indigo to let colored arrows shine */
-      'background-opacity': 0.9,
-      'border-width': 2,
-      'border-color': 'rgba(79, 70, 229, 0.4)',
+      'background-color': '#ff8a80', /* Neo4j-style pastel Coral/Salmon */
+      'background-opacity': 1,
+      'border-width': 0, /* Neo4j console usually shows flat borderless nodes */
 
       /* Size proportional to citation count (increased to fit text!) */
       'width': 'mapData(citations, 0, 50000, 45, 85)',
@@ -71,9 +69,9 @@ const cytoscapeStylesheet = [
   {
     selector: 'node:active, node:selected',
     style: {
-      'background-color': '#818cf8',
-      'border-color': '#a78bfa',
-      'border-width': 3,
+      'background-color': '#ffb0a8', /* Lighter coral */
+      'border-color': '#ffccc7',
+      'border-width': 2,
       'overlay-opacity': 0,
     },
   },
@@ -82,8 +80,8 @@ const cytoscapeStylesheet = [
   {
     selector: 'node[?isSeed]',
     style: {
-      'background-color': '#0891b2', /* Deeper cyan */
-      'border-color': 'rgba(8, 145, 178, 0.4)',
+      'background-color': '#e53935', /* Deep red to make seeds pop against coral graph */
+      'color': '#ffffff', /* White text for deep red background */
     },
   },
 
